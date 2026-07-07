@@ -1,0 +1,10 @@
+---
+- name: Example playbook used to smoke-test the action
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "Hello from docker-ansible-github-action!"

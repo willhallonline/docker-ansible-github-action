@@ -1,28 +1,85 @@
-name: "Docker Ansible"
-description: "Run an Ansible playbook from a Docker-based GitHub Action"
-author: "willhallonline"
-
+name: 'Docker Ansible'
+description: 'Run Ansible playbooks in CI using the willhallonline/docker-ansible container images'
+author: 'Will Hall'
 branding:
-  icon: "terminal"
-  color: "blue"
+  icon: 'terminal'
+  color: 'blue'
 
 inputs:
   playbook:
-    description: "Path to the Ansible playbook to run"
+    description: 'Path to the Ansible playbook to run, relative to working-directory.'
     required: true
   inventory:
-    description: "Inventory file/path passed to ansible-playbook -i"
+    description: 'Path to the inventory file or directory, relative to working-directory.'
     required: false
-    default: "inventory"
-  extra-args:
-    description: "One additional ansible-playbook flag token without spaces (for example: -vv or --check)"
+    default: ''
+  working-directory:
+    description: 'Directory (relative to the workspace root) to run ansible-playbook from.'
     required: false
-    default: ""
+    default: '.'
+  requirements:
+    description: 'Path (relative to working-directory) to a requirements.yml file (roles and/or collections) installed via `ansible-galaxy install` before the playbook runs.'
+    required: false
+    default: ''
+  galaxy-options:
+    description: 'Additional arguments appended to the `ansible-galaxy install` command.'
+    required: false
+    default: ''
+  vault-password:
+    description: 'Ansible Vault password (plaintext). Written to a temporary file on the runner and passed as --vault-password-file. Pass this via a GitHub secret.'
+    required: false
+    default: ''
+  vault-password-file:
+    description: 'Path (relative to working-directory) to an existing vault password file. Ignored if vault-password is set.'
+    required: false
+    default: ''
+  private-key:
+    description: 'SSH private key (PEM contents) used to connect to managed hosts. Written to a temporary file with 600 permissions on the runner. Pass this via a GitHub secret.'
+    required: false
+    default: ''
+  host-key-checking:
+    description: 'Whether to enforce SSH host key checking ("true"/"false").'
+    required: false
+    default: 'true'
+  known-hosts:
+    description: 'Additional known_hosts entries to trust before connecting.'
+    required: false
+    default: ''
+  extra-vars:
+    description: 'Value passed to `--extra-vars` (supports @file.yml, key=value pairs, or a JSON string).'
+    required: false
+    default: ''
+  options:
+    description: 'Additional raw, space-separated arguments appended to the ansible-playbook command (e.g. "-vvv --check --limit staging").'
+    required: false
+    default: ''
+  image-tag:
+    description: 'Tag of the willhallonline/ansible Docker image to use. See https://hub.docker.com/r/willhallonline/ansible/tags for available tags.'
+    required: false
+    default: 'latest'
 
 outputs:
-  result:
-    description: "Result of the ansible-playbook execution"
+  exit-code:
+    description: 'Exit code returned by ansible-playbook.'
+    value: ${{ steps.run-ansible.outputs.exit-code }}
 
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: 'composite'
+  steps:
+    - id: run-ansible
+      shell: bash
+      run: ${{ github.action_path }}/entrypoint.sh
+      env:
+        INPUT_PLAYBOOK: ${{ inputs.playbook }}
+        INPUT_INVENTORY: ${{ inputs.inventory }}
+        INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
+        INPUT_REQUIREMENTS: ${{ inputs.requirements }}
+        INPUT_GALAXY_OPTIONS: ${{ inputs.galaxy-options }}
+        INPUT_VAULT_PASSWORD: ${{ inputs.vault-password }}
+        INPUT_VAULT_PASSWORD_FILE: ${{ inputs.vault-password-file }}
+        INPUT_PRIVATE_KEY: ${{ inputs.private-key }}
+        INPUT_HOST_KEY_CHECKING: ${{ inputs.host-key-checking }}
+        INPUT_KNOWN_HOSTS: ${{ inputs.known-hosts }}
+        INPUT_EXTRA_VARS: ${{ inputs.extra-vars }}
+        INPUT_OPTIONS: ${{ inputs.options }}
+        INPUT_IMAGE_TAG: ${{ inputs.image-tag }}
