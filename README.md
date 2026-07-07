@@ -1,2 +1,30 @@
 # docker-ansible-github-action
-A GitHub Action using Ansible in Docker
+
+A Docker-based GitHub Action framework for running Ansible playbooks.
+
+## Usage
+
+```yaml
+- name: Run playbook
+  uses: willhallonline/docker-ansible-github-action@v1
+  with:
+    playbook: ./site.yml
+    inventory: ./inventory
+    extra-args: -vv
+```
+
+## Inputs
+
+| Name | Required | Default | Description |
+| --- | --- | --- | --- |
+| `playbook` | Yes | _none_ | Path to the Ansible playbook to run |
+| `inventory` | No | `inventory` | Inventory file/path passed to `ansible-playbook -i` |
+| `extra-args` | No | `""` | One additional `ansible-playbook` flag token without spaces (for example `-vv` or `--check`) |
+
+`extra-args` intentionally supports a single flag token only.
+
+## Outputs
+
+| Name | Description |
+| --- | --- |
+| `result` | Result of the `ansible-playbook` execution |

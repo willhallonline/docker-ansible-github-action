@@ -1,0 +1,28 @@
+name: "Docker Ansible"
+description: "Run an Ansible playbook from a Docker-based GitHub Action"
+author: "willhallonline"
+
+branding:
+  icon: "terminal"
+  color: "blue"
+
+inputs:
+  playbook:
+    description: "Path to the Ansible playbook to run"
+    required: true
+  inventory:
+    description: "Inventory file/path passed to ansible-playbook -i"
+    required: false
+    default: "inventory"
+  extra-args:
+    description: "One additional ansible-playbook flag token without spaces (for example: -vv or --check)"
+    required: false
+    default: ""
+
+outputs:
+  result:
+    description: "Result of the ansible-playbook execution"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
