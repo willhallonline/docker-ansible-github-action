@@ -20,7 +20,7 @@ esac
 
 case "${extra_args}" in
   *" "* | *$'\t'* | *$'\n'* | *$'\r'*)
-    echo "Input 'extra-args' must be a single argument token."
+    echo "Input 'extra-args' must not contain whitespace characters."
     exit 1
     ;;
 esac
@@ -44,11 +44,10 @@ case "${inventory}" in
     ;;
 esac
 
+ansible_cmd_status=0
 if [ -n "${extra_args}" ]; then
-  ansible_cmd_status=0
   ansible-playbook -i "${inventory}" "${extra_args}" "${INPUT_PLAYBOOK}" || ansible_cmd_status=$?
 else
-  ansible_cmd_status=0
   ansible-playbook -i "${inventory}" "${INPUT_PLAYBOOK}" || ansible_cmd_status=$?
 fi
 
