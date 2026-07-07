@@ -19,7 +19,7 @@ A Docker-based GitHub Action framework for running Ansible playbooks.
 | --- | --- | --- | --- |
 | `playbook` | Yes | _none_ | Path to the Ansible playbook to run |
 | `inventory` | No | `inventory` | Inventory file/path passed to `ansible-playbook -i` |
-| `extra-args` | No | `""` | One additional `ansible-playbook` argument token (for example `-vv` or `--check`) |
+| `extra-args` | No | `""` | One additional `ansible-playbook` flag token without spaces (for example `-vv` or `--check`) |
 
 ## Outputs
 

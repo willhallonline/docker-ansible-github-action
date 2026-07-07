@@ -38,7 +38,7 @@ case "${inventory}" in
         ;;
     esac
     if [ ! -e "${inventory}" ]; then
-      echo "Inventory path '${inventory}' was not found."
+      echo "Inventory file/directory path '${inventory}' was not found."
       exit 1
     fi
     ;;

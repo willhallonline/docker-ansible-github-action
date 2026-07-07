@@ -15,7 +15,7 @@ inputs:
     required: false
     default: "inventory"
   extra-args:
-    description: "One additional ansible-playbook argument token (for example: -vv or --check)"
+    description: "One additional ansible-playbook flag token without spaces (for example: -vv or --check)"
     required: false
     default: ""
 
