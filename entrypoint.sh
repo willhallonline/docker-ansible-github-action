@@ -11,8 +11,16 @@ extra_args="${INPUT_EXTRA_ARGS:-}"
 workspace="${GITHUB_WORKSPACE:-$(pwd)}"
 
 case "${inventory}" in
+  # defense in depth: quick pattern block before canonical workspace validation below
   ".." | "../"* | *"/../"* | *"/.." | /* | "~"* | *$'\n'* | *$'\r'*)
     echo "Input 'inventory' contains invalid path content."
+    exit 1
+    ;;
+esac
+
+case "${extra_args}" in
+  *" "* | *$'\t'* | *$'\n'* | *$'\r'*)
+    echo "Input 'extra-args' must be a single argument token."
     exit 1
     ;;
 esac
@@ -30,7 +38,7 @@ case "${inventory}" in
         ;;
     esac
     if [ ! -e "${inventory}" ]; then
-      echo "Inventory file or path '${inventory}' was not found."
+      echo "Inventory path '${inventory}' was not found."
       exit 1
     fi
     ;;
