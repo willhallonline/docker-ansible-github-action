@@ -10,7 +10,7 @@ inventory="${INPUT_INVENTORY:-inventory}"
 extra_args="${INPUT_EXTRA_ARGS:-}"
 
 case "${inventory}" in
-  *".."* | *$'\n'* | *$'\r'*)
+  ".." | "../"* | *"/../"* | *"/.." | *$'\n'* | *$'\r'*)
     echo "Input 'inventory' contains invalid path content."
     exit 1
     ;;
@@ -20,6 +20,16 @@ if [ -n "${extra_args}" ] && printf '%s' "${extra_args}" | grep -Eq '[^A-Za-z0-9
   echo "Input 'extra-args' contains unsupported characters."
   exit 1
 fi
+
+case "${inventory}" in
+  *,*) : ;;
+  *)
+    if [ ! -e "${inventory}" ]; then
+      echo "Inventory file or path '${inventory}' was not found."
+      exit 1
+    fi
+    ;;
+esac
 
 set -f
 set --
