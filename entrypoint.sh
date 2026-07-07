@@ -9,6 +9,18 @@ fi
 inventory="${INPUT_INVENTORY:-inventory}"
 extra_args="${INPUT_EXTRA_ARGS:-}"
 
+case "${inventory}" in
+  *".."* | *$'\n'* | *$'\r'*)
+    echo "Input 'inventory' contains invalid path content."
+    exit 1
+    ;;
+esac
+
+if [ -n "${extra_args}" ] && printf '%s' "${extra_args}" | grep -Eq '[^A-Za-z0-9_.,:/=+@% -]'; then
+  echo "Input 'extra-args' contains unsupported characters."
+  exit 1
+fi
+
 set -f
 set --
 if [ -n "${extra_args}" ]; then
