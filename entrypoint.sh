@@ -8,22 +8,27 @@ fi
 
 inventory="${INPUT_INVENTORY:-inventory}"
 extra_args="${INPUT_EXTRA_ARGS:-}"
+workspace="${GITHUB_WORKSPACE:-$(pwd)}"
 
 case "${inventory}" in
-  ".." | "../"* | *"/../"* | *"/.." | *$'\n'* | *$'\r'*)
+  ".." | "../"* | *"/../"* | *"/.." | /* | "~"* | *$'\n'* | *$'\r'*)
     echo "Input 'inventory' contains invalid path content."
     exit 1
     ;;
 esac
 
-if [ -n "${extra_args}" ] && printf '%s' "${extra_args}" | grep -Eq '[^A-Za-z0-9_.,:/=+@% -]'; then
-  echo "Input 'extra-args' contains unsupported characters."
-  exit 1
-fi
-
 case "${inventory}" in
   *,*) : ;;
   *)
+    resolved_inventory="$(realpath -m "${inventory}")"
+    resolved_workspace="$(realpath -m "${workspace}")"
+    case "${resolved_inventory}" in
+      "${resolved_workspace}" | "${resolved_workspace}"/*) : ;;
+      *)
+        echo "Inventory file or path '${inventory}' must be inside the workspace."
+        exit 1
+        ;;
+    esac
     if [ ! -e "${inventory}" ]; then
       echo "Inventory file or path '${inventory}' was not found."
       exit 1
@@ -31,15 +36,15 @@ case "${inventory}" in
     ;;
 esac
 
-set -f
-set --
 if [ -n "${extra_args}" ]; then
-  # split extra args on whitespace into positional parameters
-  # shellcheck disable=SC2086
-  set -- ${extra_args}
+  ansible_cmd_status=0
+  ansible-playbook -i "${inventory}" "${extra_args}" "${INPUT_PLAYBOOK}" || ansible_cmd_status=$?
+else
+  ansible_cmd_status=0
+  ansible-playbook -i "${inventory}" "${INPUT_PLAYBOOK}" || ansible_cmd_status=$?
 fi
 
-if ansible-playbook -i "${inventory}" "$@" "${INPUT_PLAYBOOK}"; then
+if [ "${ansible_cmd_status}" -eq 0 ]; then
   echo "result=success" >>"${GITHUB_OUTPUT}"
 else
   echo "result=failure" >>"${GITHUB_OUTPUT}"
