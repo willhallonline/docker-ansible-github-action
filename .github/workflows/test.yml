@@ -44,5 +44,5 @@ jobs:
         with:
           playbook: examples/playbook.yml
           inventory: examples/inventory.ini
-          image-tag: '2.21-alpine-3.22'
+          image-tag: '2.21-alpine-3.24'
           options: '-vv'
