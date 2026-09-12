@@ -44,7 +44,7 @@ jobs:
           known-hosts: ${{ secrets.KNOWN_HOSTS }}
           extra-vars: '@vars/production.yml'
           options: '--limit production -vv'
-          image-tag: '2.21-alpine-3.22'
+          image-tag: '2.21-alpine-3.24'
 ```
 
 ## Inputs
@@ -77,6 +77,8 @@ jobs:
 2. If `requirements` is set, it runs `ansible-galaxy install -r <requirements>` inside the container.
 3. It runs `ansible-playbook <playbook>` inside the container, with your repo mounted at `/ansible` (working directory `/ansible/<working-directory>`), forwarding `inventory`, `extra-vars`, vault password, private key, and any extra `options`.
 4. Secrets (`private-key`, `vault-password`, `known-hosts`) are written to a temporary directory on the runner (not the repo), mounted read-only into the container, and removed after the run.
+
+The action supports the current non-root `ansible` user used by the upstream images. SSH material is mounted under `/home/ansible/.ssh`, matching the image's default home directory.
 
 See [`examples/`](examples) for a minimal playbook/inventory used by this repo's own CI smoke test, and the upstream [docker-ansible README](https://github.com/willhallonline/docker-ansible#readme) for the full list of supported image tags and included Ansible versions.
 

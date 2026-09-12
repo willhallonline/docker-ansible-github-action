@@ -30,14 +30,14 @@ PLAYBOOK_KEY_ARGS=()
 if [[ -n "${INPUT_PRIVATE_KEY:-}" ]]; then
   printf '%s\n' "${INPUT_PRIVATE_KEY}" > "${SECRETS_DIR}/id_rsa"
   chmod 600 "${SECRETS_DIR}/id_rsa"
-  DOCKER_ARGS+=(-v "${SECRETS_DIR}/id_rsa:/root/.ssh/id_rsa:ro")
-  PLAYBOOK_KEY_ARGS+=(--private-key /root/.ssh/id_rsa)
+  DOCKER_ARGS+=(-v "${SECRETS_DIR}/id_rsa:/home/ansible/.ssh/id_rsa:ro")
+  PLAYBOOK_KEY_ARGS+=(--private-key /home/ansible/.ssh/id_rsa)
 fi
 
 if [[ -n "${INPUT_KNOWN_HOSTS:-}" ]]; then
   printf '%s\n' "${INPUT_KNOWN_HOSTS}" > "${SECRETS_DIR}/known_hosts"
   chmod 600 "${SECRETS_DIR}/known_hosts"
-  DOCKER_ARGS+=(-v "${SECRETS_DIR}/known_hosts:/root/.ssh/known_hosts:ro")
+  DOCKER_ARGS+=(-v "${SECRETS_DIR}/known_hosts:/home/ansible/.ssh/known_hosts:ro")
 fi
 
 VAULT_ARGS=()
