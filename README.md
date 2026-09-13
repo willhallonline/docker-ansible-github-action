@@ -4,6 +4,8 @@ A GitHub Action that runs `ansible-playbook` inside the [willhallonline/docker-a
 
 This is a **composite action**: it doesn't rebuild a container image itself, it pulls the `willhallonline/ansible` image (any tag you choose) and runs it via `docker run` on the GitHub-hosted runner, mounting your checked-out repo. This keeps runs fast (image layers are cached) and lets you pin any Ansible/OS combination published by that project.
 
+See the [Docker Ansible documentation](https://docker-ansible.github.io/) to make the project easier to use, extend, and contribute to.
+
 ## Usage
 
 ```yaml
