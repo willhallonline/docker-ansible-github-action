@@ -6,6 +6,22 @@ set -euo pipefail
 
 log() { printf '\n\033[1;34m[docker-ansible]\033[0m %s\n' "$1"; }
 fail() { printf '\n\033[1;31m[docker-ansible] ERROR:\033[0m %s\n' "$1" >&2; exit 1; }
+pull_image() {
+  local attempts=3
+
+  for ((attempt = 1; attempt <= attempts; attempt++)); do
+    if docker pull --quiet "${IMAGE}" >/dev/null; then
+      return 0
+    fi
+
+    if (( attempt < attempts )); then
+      log "Image pull failed (attempt ${attempt}/${attempts}); retrying in 5 seconds"
+      sleep 5
+    fi
+  done
+
+  return 1
+}
 
 : "${INPUT_PLAYBOOK:?the 'playbook' input is required}"
 WORKSPACE="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is not set - this action must run on a GitHub Actions runner}"
@@ -73,7 +89,7 @@ if [[ -n "${INPUT_GALAXY_OPTIONS:-}" ]]; then
 fi
 
 log "Pulling image ${IMAGE}"
-docker pull --quiet "${IMAGE}" >/dev/null || fail "unable to pull ${IMAGE}"
+pull_image || fail "unable to pull ${IMAGE}"
 
 if [[ -n "${INPUT_REQUIREMENTS:-}" ]]; then
   log "Installing requirements from ${INPUT_REQUIREMENTS}"
