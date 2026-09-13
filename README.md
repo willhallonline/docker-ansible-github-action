@@ -1,4 +1,4 @@
-# docker-ansible-github-action
+# Docker Ansible GitHub Action
 
 A GitHub Action that runs `ansible-playbook` inside the [willhallonline/docker-ansible](https://github.com/willhallonline/docker-ansible) container images ([Docker Hub](https://hub.docker.com/r/willhallonline/ansible)), so your CI runs the exact same Ansible environment as your local `docker run willhallonline/ansible ...` workflow.
 
