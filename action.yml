@@ -1,4 +1,4 @@
-name: 'Docker Ansible'
+name: 'Docker Ansible GitHub Action'
 description: 'Run Ansible playbooks in CI using the willhallonline/docker-ansible container images'
 author: 'Will Hall'
 branding:
