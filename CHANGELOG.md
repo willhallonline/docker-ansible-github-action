@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.1
+
+- Retry transient Docker image pulls before failing.
+- Refresh the Docker Ansible documentation link and pinned image reference.
+
 ## v1.1.0
 
 - Support the non-root `ansible` user used by the current `willhallonline/ansible` images.
