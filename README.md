@@ -8,6 +8,8 @@ See the [Docker Ansible documentation](https://docker-ansible.github.io/) to mak
 
 ## Usage
 
+The latest release is `v1.1.1`. Pin `@v1.1.1` for an exact release or use the `@v1` major tag for the latest compatible release in the v1 series.
+
 ```yaml
 name: Deploy
 
@@ -22,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run playbook
-        uses: willhallonline/docker-ansible-github-action@v1
+        uses: willhallonline/docker-ansible-github-action@v1.1.1
         with:
           playbook: playbooks/site.yml
           inventory: inventory/production.ini
@@ -36,7 +38,7 @@ jobs:
 
 ```yaml
       - name: Run playbook
-        uses: willhallonline/docker-ansible-github-action@v1
+        uses: willhallonline/docker-ansible-github-action@v1.1.1
         with:
           playbook: site.yml
           inventory: inventory/production.ini
@@ -75,7 +77,7 @@ jobs:
 
 ## How it works
 
-1. The action pulls `willhallonline/ansible:<image-tag>`.
+1. The action pulls `willhallonline/ansible:<image-tag>` and retries transient pull failures up to three total attempts, waiting five seconds between attempts.
 2. If `requirements` is set, it runs `ansible-galaxy install -r <requirements>` inside the container.
 3. It runs `ansible-playbook <playbook>` inside the container, with your repo mounted at `/ansible` (working directory `/ansible/<working-directory>`), forwarding `inventory`, `extra-vars`, vault password, private key, and any extra `options`.
 4. Secrets (`private-key`, `vault-password`, `known-hosts`) are written to a temporary directory on the runner (not the repo), mounted read-only into the container, and removed after the run.
