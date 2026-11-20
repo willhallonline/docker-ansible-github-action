@@ -54,7 +54,7 @@ inputs:
     required: false
     default: ''
   image-tag:
-    description: 'Tag of the willhallonline/ansible Docker image to use. See https://hub.docker.com/r/willhallonline/ansible/tags for available tags.'
+    description: 'Tag of the willhallonline/ansible Docker image to use (for example, 2.22-alpine-3.24). Pin an exact versioned tag for reproducible deployments. See https://hub.docker.com/r/willhallonline/ansible/tags for available tags.'
     required: false
     default: 'latest'
 
