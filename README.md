@@ -8,7 +8,7 @@ See the [Docker Ansible documentation](https://docker-ansible.github.io/) to mak
 
 ## Usage
 
-The latest release is `v1.1.1`. Pin `@v1.1.1` for an exact release or use the `@v1` major tag for the latest compatible release in the v1 series.
+The latest release is `v1.1.2`. Pin `@v1.1.2` for an exact release or use the `@v1` major tag for the latest compatible release in the v1 series.
 
 ```yaml
 name: Deploy
@@ -24,21 +24,21 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run playbook
-        uses: willhallonline/docker-ansible-github-action@v1.1.1
+        uses: willhallonline/docker-ansible-github-action@v1.1.2
         with:
           playbook: playbooks/site.yml
           inventory: inventory/production.ini
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           host-key-checking: 'false'
           extra-vars: 'env=production'
-          image-tag: 'latest'
+          image-tag: '2.22-alpine-3.24'
 ```
 
 ### With Ansible Vault and Galaxy requirements
 
 ```yaml
       - name: Run playbook
-        uses: willhallonline/docker-ansible-github-action@v1.1.1
+        uses: willhallonline/docker-ansible-github-action@v1.1.2
         with:
           playbook: site.yml
           inventory: inventory/production.ini
@@ -48,7 +48,7 @@ jobs:
           known-hosts: ${{ secrets.KNOWN_HOSTS }}
           extra-vars: '@vars/production.yml'
           options: '--limit production -vv'
-          image-tag: '2.21-alpine-3.24'
+          image-tag: '2.22-alpine-3.24'
 ```
 
 ## Inputs
@@ -67,7 +67,7 @@ jobs:
 | `known-hosts`          | no       | `''`       | Additional `known_hosts` entries to trust before connecting.                                                    |
 | `extra-vars`           | no       | `''`       | Value passed to `--extra-vars` (`@file.yml`, `key=value`, or a JSON string).                                    |
 | `options`              | no       | `''`       | Additional raw, space-separated arguments appended to `ansible-playbook` (e.g. `-vvv --check --limit staging`). |
-| `image-tag`            | no       | `latest`   | Tag of the `willhallonline/ansible` image to use. See [available tags](https://hub.docker.com/r/willhallonline/ansible/tags). |
+| `image-tag`            | no       | `latest`   | Tag of the `willhallonline/ansible` image to use. Use an exact versioned tag such as `2.22-alpine-3.24` for reproducible deployments. See [available tags](https://hub.docker.com/r/willhallonline/ansible/tags). |
 
 ## Outputs
 

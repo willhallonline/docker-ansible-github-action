@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.2
+
+- Update deployment documentation and smoke tests to the current `2.22-alpine-3.24` image.
+- Clarify that exact versioned image tags are recommended for reproducible deployments.
+
 ## v1.1.1
 
 - Retry transient Docker image pulls before failing.
